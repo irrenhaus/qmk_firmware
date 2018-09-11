@@ -6,12 +6,19 @@
 
 extern keymap_config_t keymap_config;
 
-#define _QWERTZ 0
+#define _NEO2   0
 #define _MOD3   1
 #define _MOD4   2
 
+#define _QWERTZ0 16
+#define _QWERTZ1 16
+
+#define NEO2  DF(_NEO2)
 #define MOD3  MO(_MOD3)
 #define MOD4  MO(_MOD4)
+
+#define QWERTZ  DF(_QWERTZ0)
+#define QWERTZ1 MO(_QWERTZ1)
 
 #define _______ KC_TRNS
 #define XXXXXXX KC_NO
@@ -19,7 +26,7 @@ extern keymap_config_t keymap_config;
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-  [_QWERTZ] = LAYOUT_5x6(
+  [_NEO2] = LAYOUT_5x6(
      KC_ESC , DE_1  , DE_2  , DE_3  , DE_4  , DE_5  ,                         DE_6  , DE_7  , DE_8  , DE_9  , DE_0  ,DE_MINS,
      XXXXXXX, DE_X  , DE_V  , DE_L  , DE_C  , DE_W  ,                         DE_K  , DE_H  , DE_G  , DE_F  , DE_Q  ,DE_SS,
      XXXXXXX, DE_U  , DE_I  , DE_A  , DE_E  , DE_O  ,                         DE_S  , DE_N  , DE_R  , DE_T  , DE_D  ,DE_Y,
@@ -42,7 +49,31 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 
   [_MOD4] = LAYOUT_5x6(
+     QWERTZ ,_______,_______,_______,_______,_______,                        _______,_______,_______,_______,_______,_______,
      _______,_______,_______,_______,_______,_______,                        _______,_______,_______,_______,_______,_______,
+     _______,_______,_______,_______,_______,_______,                        KC_LEFT,KC_DOWN, KC_UP ,KC_RGHT,_______,_______,
+     _______,_______,_______,_______,_______,_______,                        _______,_______,_______,_______,_______,_______,
+                                     _______,_______,                        _______,_______,
+                                     _______,_______,                        _______,_______,
+                                     _______,_______,                        _______,_______,
+                                       RESET, DEBUG ,                         DEBUG ,RESET
+  ),
+
+  // QWERTZ based layout from here on
+
+  [_QWERTZ0] = LAYOUT_5x6(
+     KC_ESC , DE_1  , DE_2  , DE_3  , DE_4  , DE_5  ,                         DE_6  , DE_7  , DE_8  , DE_9  , DE_0  ,DE_MINS,
+     XXXXXXX, DE_Q  , DE_W  , DE_E  , DE_R  , DE_T  ,                         DE_Z  , DE_U  , DE_I  , DE_O  , DE_P  ,DE_UE  ,
+     XXXXXXX, DE_A  , DE_S  , DE_D  , DE_F  , DE_G  ,                         DE_H  , DE_J  , DE_K  , DE_L  , DE_OE ,DE_AE  ,
+      KC_TAB, DE_Y  , DE_X  , DE_C  , DE_V  , DE_B  ,                         DE_N  , DE_M  ,DE_COMM,DE_DOT ,DE_MINS,DE_PLUS,
+                     _______,QWERTZ1,                                                        _______,_______,
+                                     KC_SPC , KC_LSFT,                        KC_BSPC, KC_ENT,
+                                     QWERTZ1,KC_LALT,                        DE_ALGR, MOD3  ,
+                                     KC_LCTL,KC_LGUI,                         KC_DEL,KC_RCTL
+  ),
+
+  [_QWERTZ1] = LAYOUT_5x6(
+       NEO2 ,_______,_______,_______,_______,_______,                        _______,_______,_______,_______,_______,_______,
      _______,_______,_______,_______,_______,_______,                        _______,_______,_______,_______,_______,_______,
      _______,_______,_______,_______,_______,_______,                        KC_LEFT,KC_DOWN, KC_UP ,KC_RGHT,_______,_______,
      _______,_______,_______,_______,_______,_______,                        _______,_______,_______,_______,_______,_______,
