@@ -27,7 +27,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                      _______,  MOD4 ,                                                        _______,_______,
                                      KC_SPC, KC_LSFT,                        KC_BSPC, KC_ENT,
                                      MOD3   ,KC_LALT,                        KC_RALT, MOD3  ,
-                                     KC_LCTL,KC_LGUI,                        KC_RGUI,KC_RCTL
+                                     KC_LCTL,KC_LGUI,                         KC_DEL,KC_RCTL
   ),
 
   [_MOD3] = LAYOUT_5x6(
