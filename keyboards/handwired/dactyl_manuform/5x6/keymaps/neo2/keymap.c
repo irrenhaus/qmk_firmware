@@ -3,6 +3,7 @@
 #include QMK_KEYBOARD_H
 
 #include "keymap_german.h"
+#include "rgblight.h"
 
 extern keymap_config_t keymap_config;
 
@@ -23,8 +24,63 @@ extern keymap_config_t keymap_config;
 #define _______  KC_TRNS
 #define XXXXXXX  KC_NO
 
-#define ALT_TAB LALT(KC_TAB)
+#define LCTLALT TD(TD_LCTLALT)
+#define RCTLALT TD(TD_RCTLALT)
 
+//Tap Dance Declarations
+enum {
+    TD_LCTLALT = 0,
+    TD_RCTLALT
+};
+
+//Tap Dance Definitions
+qk_tap_dance_action_t tap_dance_actions[] = {
+  //Tap once for LCTL, twice for LALT
+  [TD_LCTLALT] = ACTION_TAP_DANCE_DOUBLE(KC_LCTL, KC_LALT),
+  //Tap once for RCTL, twice for RALT
+  [TD_RCTLALT] = ACTION_TAP_DANCE_DOUBLE(KC_RCTL, KC_RALT)
+};
+
+void matrix_init_user() {
+	rgblight_enable();
+    rgblight_setrgb(0xFF, 0xFF, 0xFF);
+}
+
+
+void matrix_scan_user(void) {
+  #ifdef RGBLIGHT_ENABLE
+
+  static uint8_t old_layer = 255;
+  uint8_t new_layer = biton32(layer_state);
+
+  if (old_layer != new_layer) {
+    switch (new_layer) {
+      case _NEO1:
+        rgblight_setrgb(0xFF, 0xFF, 0xFF);
+        break;
+      case _NEO3:
+        rgblight_setrgb(0xFF, 0xA0, 0xFF);
+        break;
+      case _NEO4:
+        rgblight_setrgb(0xA0, 0xFF, 0xFF);
+        break;
+      case _QWERTZ0:
+        rgblight_setrgb(0xFF, 0x00, 0x00);
+        break;
+      case _QWERTZ1:
+        rgblight_setrgb(0xFF, 0x00, 0xFF);
+        break;
+    }
+
+    old_layer = new_layer;
+  }
+
+  #endif //RGBLIGHT_ENABLE
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  return true;
+}
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -34,9 +90,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      XXXXXXX, DE_U  , DE_I  , DE_A  , DE_E  , DE_O  ,                         DE_S  , DE_N  , DE_R  , DE_T  , DE_D  ,DE_Y,
       KC_TAB, DE_UE , DE_OE , DE_AE , DE_P  , DE_Z  ,                         DE_B  , DE_M  ,DE_COMM,DE_DOT , DE_J  ,DE_PLUS,
                      _______,_______,                                                        _______,_______,
-                                     KC_SPC, KC_LSFT,                        KC_RSFT, KC_ENT,
-                                      NEO3 ,  NEO4  ,                          NEO4 ,  NEO3 ,
-                                     KC_LCTL,KC_LGUI,                         KC_DEL,KC_RCTL
+                                       NEO3 , KC_SPC,                         KC_ENT,  NEO4 ,
+                                     KC_LSFT,  NEO4  ,                          NEO3,KC_RSFT,
+                                     LCTLALT,KC_LGUI,                         KC_DEL,RCTLALT
   ),
 
   [_NEO3] = LAYOUT_5x6(
@@ -52,10 +108,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_NEO4] = LAYOUT_5x6(
      QWERTZ ,_______,_______,_______,_______,_______,                        _______,_______,_______,_______,_______,_______,
-     _______,KC_PGUP,KC_BSPC, KC_UP , KC_DEL,KC_PGDN,                        _______,  KC_7 ,  KC_8 ,  KC_9 ,_______,_______,
-     ALT_TAB,KC_HOME,KC_LEFT,KC_DOWN,KC_RGHT, KC_END,                        _______,  KC_4 ,  KC_5 ,  KC_6 ,_______,_______,
-     _______,KC_ESC ,KC_TAB ,KC_PSTE, KC_ENT,KC_UNDO,                        _______,  KC_1 ,  KC_2 ,  KC_3 ,_______,_______,
-                                     _______,_______,                        _______, KC_0 ,
+     RGB_M_T,KC_PGUP,KC_BSPC, KC_UP , KC_DEL,KC_PGDN,                        _______,  KC_7 ,  KC_8 ,  KC_9 ,_______,RGB_HUI,
+     _______,KC_HOME,KC_LEFT,KC_DOWN,KC_RGHT, KC_END,                        _______,  KC_4 ,  KC_5 ,  KC_6 ,_______,_______,
+     RGB_TOG,KC_ESC ,KC_TAB ,KC_PSTE, KC_ENT,KC_UNDO,                        _______,  KC_1 ,  KC_2 ,  KC_3 ,_______,RGB_TOG,
+                                     _______,_______,                          KC_0 ,_______,
                                      _______,_______,                        _______,_______,
                                      _______,_______,                        _______,_______,
                                        RESET, DEBUG ,                         DEBUG ,RESET
@@ -69,8 +125,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      XXXXXXX, DE_A  , DE_S  , DE_D  , DE_F  , DE_G  ,                         DE_H  , DE_J  , DE_K  , DE_L  , DE_OE ,DE_AE  ,
       KC_TAB, DE_Y  , DE_X  , DE_C  , DE_V  , DE_B  ,                         DE_N  , DE_M  ,DE_COMM,DE_DOT ,DE_MINS,DE_PLUS,
                      _______,_______,                                                        _______,_______,
-                                     KC_SPC , KC_LSFT,                        KC_BSPC, KC_ENT,
-                                     QWERTZ1,KC_LALT,                        DE_ALGR, NEO3  ,
+                                     QWERTZ1, KC_SPC,                         KC_ENT,QWERTZ1,
+                                     KC_LSFT,QWERTZ1,                        QWERTZ1,KC_RSFT,
                                      KC_LCTL,KC_LGUI,                         KC_DEL,KC_RCTL
   ),
 
